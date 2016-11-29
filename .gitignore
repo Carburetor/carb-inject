@@ -1,0 +1,39 @@
+/.bundle/
+/.yardoc
+/Gemfile.lock
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+
+.project
+.directory
+*.swp
+*~
+.DS_Store
+.idea
+.envrc
+.nvmrc
+.ruby-gemset
+.ruby-version
+.rspec-local
+public
+*.backup
+npm-debug.log
+
+# Ignore bundler config
+/.bundle
+/vendor/bundle
+
+# Ignore all logfiles and tempfiles.
+/log/*.log
+/tmp
+/binstubs/
+
+# Ignore user import data
+/data
+
+# YARD
+.yardoc
