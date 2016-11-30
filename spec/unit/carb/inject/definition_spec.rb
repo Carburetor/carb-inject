@@ -68,4 +68,20 @@ describe Carb::Inject::Definition do
     expect(klass.public_method_defined?(:foo)).to be true
     expect(instance.foo).to eq 123
   end
+
+  it "defines attr_reader even if class method has same name" do
+    mod   = Carb::Inject::Definition.new({ foo: 1 }, { foo: :foo })
+    klass = Class.new do
+      def self.foo
+        456
+      end
+
+      include mod
+    end
+
+    instance = klass.new
+
+    expect(klass.protected_method_defined?(:foo)).to be true
+    expect(instance.send(:foo)).to eq 1
+  end
 end
