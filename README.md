@@ -101,6 +101,22 @@ john = JohnPerson.new(a_number: 20)
 john.hello # => special_name is john, a_number is 20
 ```
 
+Be aware, you can't pass on-the-fly dependencies that were not defined on that
+class. If you do, you must be the one taking care of them!
+
+```ruby
+class JohnPerson
+  include Inject[:name]
+
+  def hello
+    "Hello I'm #{name}, #{age} years old"
+  end
+end
+
+john = JohnPerson.new(age: 20)
+john.hello # => NameError: undefined local variable or method `age'
+```
+
 ## Features
 
 - Supports inheritance (as long as you call `super`)
