@@ -70,7 +70,7 @@ module Carb
       end
 
       def define_reader(klass, name)
-        unless klass.respond_to?(name)
+        unless klass.method_defined?(name)
           klass.send(:attr_reader, name)
           klass.send(:protected, name)
         end
