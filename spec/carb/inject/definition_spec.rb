@@ -4,6 +4,14 @@ require "carb/inject/definition_cache_name"
 require "carb/inject/injectable"
 
 describe Carb::Inject::Definition do
+  it "raises if container can't be accessed using #[]" do
+     expect{Carb::Inject::Definition.new(Object.new)}.to raise_error TypeError
+  end
+
+  it "raises if container is nil" do
+     expect{Carb::Inject::Definition.new(nil)}.to raise_error TypeError
+  end
+
   it "memoizes itself on including class" do
     mod = Carb::Inject::Definition.new({})
 
