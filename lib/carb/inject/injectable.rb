@@ -3,8 +3,8 @@ require "carb/inject/dependency_storer"
 
 module Carb
   module Inject
-    # Takes care of setting instance variables with names of dependencies.
-    # Initialize dependencies even for super classes
+    # Provides an initializer which sets instance variables with names of
+    # dependencies and as value the dependency itself
     module Injectable
       # Initializes the object with passed dependencies
       # @param dependencies [Hash] map where key is the name of the dependency
