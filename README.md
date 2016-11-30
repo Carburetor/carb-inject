@@ -22,7 +22,69 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+First you'll need a container object.
+[dry-container](https://github.com/dry-rb/dry-container) will do the trick,
+otherwise just check the implementation of
+[Carb::SimpleContainer](https://github.com/Carburetor/carb-inject/blob/b3e9fea68672284aff53c8b78ba0064474d94021/spec/support/simple_container.rb) in
+tests
+
+```ruby
+container = { name: "john", age: 30 }
+```
+
+Create an injector that you'll use across your application. Usually you want to
+put this in a constant
+
+```ruby
+require "carb-inject"
+Inject = Carb::Inject::Injector.new(container)
+```
+
+Then, create a class you want dependencies injected automatically
+
+```ruby
+class JohnPerson
+  include Inject[:name, :age]
+
+  def hello
+    "Hello I'm #{name}, #{age} years old"
+  end
+end
+```
+
+And finally, use the class!
+
+```ruby
+john = JohnPerson.new
+john.hello # => Hello I'm john, 30 years old
+```
+
+You can overwrite dependencies on the fly
+
+```ruby
+john = JohnPerson.new(age: 20)
+john.hello # => Hello I'm john, 20 years old
+```
+
+You can still require different arguments in the constructor
+
+```ruby
+class JohnPerson
+  include Inject[:name, :age]
+
+  def initialize(last_name, **dependencies)
+    super(**dependencies)
+    @last_name = last_name
+  end
+
+  def hello
+    "Hello I'm #{name} #{@last_name}, #{age} years old"
+  end
+end
+
+john = JohnPerson.new("snow", age: 20)
+john.hello # => Hello I'm john snow, 20 years old
+```
 
 ## Development
 
