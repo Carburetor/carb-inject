@@ -1,23 +1,22 @@
+require "carb/inject/definition_cache_name"
+
 module Carb
-  module Test
-    module Inject
+  module Inject
+    module Test
       # Create a mock for {::Carb::Inject::Definition} that can be used to
       # improve test readability
       # @param klass [Class] the class which you want to mock the Definition for
       # @param dependencies [Hash] dependency name and value, will be yield
       #   using {::Carb::Inject::Definition#each_dependency} in the same order
       #   as in the {Hash}
-      # @param expect_new [Boolean] if true, expects {#new} to receive as
-      #   arguments the dependecies passed for mocking
       # @return [Double] the double object which is used for mocking the
       #   Definition
-      def mock_definition(klass, dependencies, expect_new: true)
+      def mock_definition(klass, **dependencies)
         definition = double("Definition", each_dependency: nil)
 
         stub_each_dependency(definition, dependencies)
-        expect_new_to_receive_dependencies(klass, dependencies) if expect_new
 
-        klass.instance_variable_set(:@__carb_inject_definition__, definition)
+        klass.instance_variable_set(definition_cache_name, definition)
       end
 
       private
@@ -30,10 +29,8 @@ module Carb
         allow(mock).to(receiver)
       end
 
-      def expect_new_to_receive_dependencies(klass, dependencies)
-        expect(klass).to receive(:new)
-          .with(hash_including(dependencies))
-          .and_call_original
+      def definition_cache_name
+        ::Carb::Inject::DefinitionCacheName
       end
     end
   end
