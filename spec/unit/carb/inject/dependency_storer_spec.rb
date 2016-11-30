@@ -1,8 +1,12 @@
 require "spec_helper"
+require "support/mock_definition"
+require "support/mock_injectable_class"
 require "carb/inject/dependency_storer"
 
+
 describe Carb::Inject::DependencyStorer do
-  include ::Carb::Inject::Test
+  include ::Carb::MockDefinition
+  include ::Carb::MockInjectable
 
   it "does nothing if class has no definition set" do
     storer   = Carb::Inject::DependencyStorer.new
