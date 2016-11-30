@@ -11,7 +11,7 @@ module Carb
       #   and value is the actual dependency being injected
       def initialize(**dependencies)
         dependency_storer = DependencyStorer.new
-        dependency_storer.(self, dependencies)
+        dependency_storer.(self, **dependencies)
       end
     end
   end
