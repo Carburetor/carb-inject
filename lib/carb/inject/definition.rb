@@ -17,7 +17,7 @@ module Carb
 
       def included(klass)
         memoize_definition(klass)
-        include_injector(klass)
+        include_injectable(klass)
         define_readers(klass)
       end
 
@@ -37,8 +37,8 @@ module Carb
         klass.instance_variable_set(DefinitionCacheName, self)
       end
 
-      def include_injector(klass)
-        klass.include(Injector) unless klass < Injector
+      def include_injectable(klass)
+        klass.include(::Carb::Inject::Injectable)
       end
 
       def define_readers(klass)
