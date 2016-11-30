@@ -86,6 +86,30 @@ john = JohnPerson.new("snow", age: 20)
 john.hello # => Hello I'm john snow, 20 years old
 ```
 
+Finally, you can alias dependencies
+
+```ruby
+class JohnPerson
+  include Inject[special_name: :name, a_number: :age]
+
+  def hello
+    "special_name is #{special_name}, a_number is #{a_number}"
+  end
+end
+
+john = JohnPerson.new(a_number: 20)
+john.hello # => special_name is john, a_number is 20
+```
+
+## Features
+
+- Supports inheritance (as long as you call `super`)
+- Can write your own injector if you don't like the syntax of the existing one
+- Can alias dependencies
+- Supports any container which responds to `[]`
+- Can write your own initializer with your own arguments (as long as you call
+  `super`)
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

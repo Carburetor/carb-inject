@@ -12,6 +12,19 @@ describe Carb::Inject::Definition do
      expect{Carb::Inject::Definition.new(nil)}.to raise_error TypeError
   end
 
+  it "raises if included multiple times" do
+    mod = Carb::Inject::Definition.new({})
+
+    includer = -> do
+      Class.new do
+        include mod
+        include mod
+      end
+    end
+
+    expect{includer.call}.to raise_error TypeError
+  end
+
   it "memoizes itself on including class" do
     mod = Carb::Inject::Definition.new({})
 

@@ -52,6 +52,10 @@ module Carb
       end
 
       def memoize_definition(klass)
+        if klass.instance_variable_defined?(DefinitionCacheName)
+          raise TypeError, "class already injecting"
+        end
+
         klass.instance_variable_set(DefinitionCacheName, self)
       end
 
