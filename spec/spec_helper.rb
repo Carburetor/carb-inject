@@ -1,5 +1,6 @@
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require "pathname"
+require "pry-byebug"
 
 SPEC_SUPPORT_PATH = Pathname.new(File.expand_path("../support", __FILE__))
 Dir[SPEC_SUPPORT_PATH.join("**/*.rb")].each { |f| require f }
