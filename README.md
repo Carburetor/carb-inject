@@ -47,6 +47,20 @@ Or install it yourself as:
       A symbol representing <code>Dependency name</code>
     </td>
   </tr>
+  <tr>
+    <th>Array of dependency names</th>
+    <td>
+      An array of <code>Dependency name</code>. When passed to the injector,
+      every object must support <code>to_s</code> and the returned
+      <code>String</code> must be a valid method name
+    </td>
+  </tr>
+  <tr>
+    <th>Hash of dependency aliases (or hash of aliases)</th>
+    <td>
+      A hash consisting of <code>Dependency alias => Dependency name</code>
+    </td>
+  </tr>
 </table>
 
 ## Usage
