@@ -20,6 +20,35 @@ Or install it yourself as:
 
     $ gem install carb-inject
 
+## Glossary
+
+<table>
+  <tr>
+    <th>Term</th>
+    <th>Meaning</th>
+  </tr>
+  <tr>
+    <th>Dependency</th>
+    <td>
+      The actual Object a dependency is (a number for example). Can be
+      extracted from the container with `container[dependency_name]`
+    </td>
+  </tr>
+  <tr>
+    <th>Dependency name</th>
+    <td>
+      An object representing the `Dependency` inside the container. Allows to
+      extract the dependency with `container[dependency_name]`
+    </td>
+  </tr>
+  <tr>
+    <th>Dependency alias</th>
+    <td>
+      A symbol representing `Dependency name`
+    </td>
+  </tr>
+</table>
+
 ## Usage
 
 First you'll need a container object.
@@ -116,6 +145,13 @@ end
 john = JohnPerson.new(age: 20)
 john.hello # => NameError: undefined local variable or method `age'
 ```
+
+## Gotchas
+
+- Alias hash **must have symbols as keys**
+- Straight dependency names, when used in array and not as values for alias
+  hash, must support `to_s` and the resulting `String` must be a valid method
+  name (an exception is raised otherwise)
 
 ## Features
 
