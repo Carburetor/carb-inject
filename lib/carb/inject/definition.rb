@@ -14,19 +14,16 @@ module Carb
       # Uses the passed container to resolve listed dependencies
       # @param container [#[]] resolve dependencies by using the value of
       #   `dependencies` hash passed to this initializer
-      # @param dependencies [Hash] a hash representing required dependencies
-      #   for the object. The key represent the alias used to access the real
-      #   dependency name, which is the value of the hash. If you want to access
-      #   the dependency using its real name, just set the alias to the real
-      #   name. Example: `{ alias: :real_name }`
+      # @param dependencies [Hash{Symbol => Object}] a hash representing
+      #   required dependencies for the object. The key represent the alias used
+      #   to access the real dependency name, which is the value of the hash.
+      #   If you want to access the dependency using its real name, just set the
+      #   alias to the real name. Example: `{ alias: :real_name }`
       def initialize(container, **dependencies)
+        ensure_correct_types!(container, dependencies)
+
         @container    = container
         @dependencies = dependencies
-
-        raise TypeError, "container can't be nil" if container.nil?
-        unless container.respond_to?(:[])
-          raise TypeError, "container doesn't respond to #[]"
-        end
       end
 
       def included(klass)
@@ -73,6 +70,18 @@ module Carb
         unless klass.method_defined?(name)
           klass.send(:attr_reader, name)
           klass.send(:protected, name)
+        end
+      end
+
+      def ensure_correct_types!(container, dependencies)
+        raise TypeError, "container can't be nil" if container.nil?
+        unless container.respond_to?(:[])
+          raise TypeError, "container doesn't respond to #[]"
+        end
+
+        raise TypeError, "dependencies can't be nil" if dependencies.nil?
+        unless dependencies.respond_to?(:[])
+          raise TypeError, "dependencies doesn't respond to #[]"
         end
       end
     end
