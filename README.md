@@ -31,20 +31,21 @@ Or install it yourself as:
     <th>Dependency</th>
     <td>
       The actual Object a dependency is (a number for example). Can be
-      extracted from the container with `container[dependency_name]`
+      extracted from the container with <code>container[dependency_name]</code>
     </td>
   </tr>
   <tr>
     <th>Dependency name</th>
     <td>
-      An object representing the `Dependency` inside the container. Allows to
-      extract the dependency with `container[dependency_name]`
+      An object representing the <code>Dependency</code> inside the container.
+      Allows to extract the dependency with
+      <code>container[dependency_name]</code>
     </td>
   </tr>
   <tr>
     <th>Dependency alias</th>
     <td>
-      A symbol representing `Dependency name`
+      A symbol representing <code>Dependency name</code>
     </td>
   </tr>
 </table>
