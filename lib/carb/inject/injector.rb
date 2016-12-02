@@ -1,4 +1,4 @@
-require "carb/inject/definition"
+require "carb/inject/dependency_list"
 
 module Carb
   module Inject
@@ -25,13 +25,13 @@ module Carb
       #   name hash, the alias must be a valid method name or it will raise. The
       #   aliases will be used to create attr_readers which will return the
       #   dependency from the container
-      # @return [Definition] module which can be included and will take care of
-      #   automatically injecting not-supplied dependency
+      # @return [DependencyList] module which can be included and will take care
+      #   of automatically injecting not-supplied dependency
       # @raise [ArgumentError] if passed dependencies or aliased_dependencies
       #   contain objects not convertible to valid method names
       def [](*dependencies, **aliased_dependencies)
         deps = merge_dependencies(dependencies, aliased_dependencies)
-        Carb::Inject::Definition.new(container, **deps)
+        Carb::Inject::DependencyList.new(container, **deps)
       end
 
       private

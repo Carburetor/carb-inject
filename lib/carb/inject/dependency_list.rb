@@ -1,9 +1,9 @@
-require "carb/inject/definition_cache_name"
+require "carb/inject/dependency_list_cache_name"
 
 module Carb
   module Inject
     # Provides the list of dependencies required by the object to be initialized
-    class Definition < Module
+    class DependencyList < Module
       private
 
       attr_reader :container
@@ -27,16 +27,16 @@ module Carb
       end
 
       def included(klass)
-        memoize_definition(klass)
+        memoize_dependency_list(klass)
         include_injectable(klass)
         define_readers(klass)
       end
 
       # Loops over each available dependency and yields it using its alias and
       # the dependency itself
-      # @yieldparam name [Object] alias of the dependency for this definition
+      # @yieldparam name [Object] alias of the dependency for this dependency_list
       # @yieldparam dependency [Object] the dependency object for this container
-      def each_dependency
+      def each
         dependencies.each do |key, value|
           yield(key, container[value])
         end
@@ -48,12 +48,12 @@ module Carb
         dependencies.keys
       end
 
-      def memoize_definition(klass)
-        if klass.instance_variable_defined?(DefinitionCacheName)
+      def memoize_dependency_list(klass)
+        if klass.instance_variable_defined?(DependencyListCacheName)
           raise TypeError, "class already injecting"
         end
 
-        klass.instance_variable_set(DefinitionCacheName, self)
+        klass.instance_variable_set(DependencyListCacheName, self)
       end
 
       def include_injectable(klass)

@@ -6,7 +6,9 @@ describe Carb::Inject do
     expect(Carb::Inject::VERSION).to be_a String
   end
 
-  it "has DefinitionCacheName set" do
-    expect(Carb::Inject::DefinitionCacheName).to eq :@__carb_inject_definition__
+  it "has DependencyListCacheName set" do
+    name = :@__carb_inject_dependency_list__
+
+    expect(Carb::Inject::DependencyListCacheName).to eq name
   end
 end

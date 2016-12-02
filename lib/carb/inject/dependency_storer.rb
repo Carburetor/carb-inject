@@ -1,4 +1,4 @@
-require "carb/inject/definition_cache_name"
+require "carb/inject/dependency_list_cache_name"
 
 module Carb
   module Inject
@@ -19,28 +19,29 @@ module Carb
       attr_reader :dependencies
 
       def inject_on(klass)
-        return unless definition_present_for?(klass)
+        return unless dependency_list_present?(klass)
 
-        inject_on(klass.superclass) if definition_present_for?(klass.superclass)
+        parent_class = klass.superclass
+        inject_on(klass.superclass) if dependency_list_present?(parent_class)
 
-        definition = definition_for(klass)
-        store_using_definition(definition)
+        list = dependency_list_for(klass)
+        store_using_dependency_list(list)
       end
 
-      def store_using_definition(definition)
-        definition.each_dependency do |name, dependency|
+      def store_using_dependency_list(list)
+        list.each do |name, dependency|
           # Ensure `nil` is an acceptable dependency
           dependency = dependencies[name] if dependencies.has_key?(name)
           injectable.instance_variable_set(:"@#{ name }", dependency)
         end
       end
 
-      def definition_present_for?(klass)
-        klass.instance_variable_defined?(DefinitionCacheName)
+      def dependency_list_present?(klass)
+        klass.instance_variable_defined?(DependencyListCacheName)
       end
 
-      def definition_for(klass)
-        klass.instance_variable_get(DefinitionCacheName)
+      def dependency_list_for(klass)
+        klass.instance_variable_get(DependencyListCacheName)
       end
     end
   end

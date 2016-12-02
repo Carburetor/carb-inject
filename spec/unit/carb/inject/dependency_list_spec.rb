@@ -1,19 +1,19 @@
 require "spec_helper"
-require "carb/inject/definition"
-require "carb/inject/definition_cache_name"
+require "carb/inject/dependency_list"
+require "carb/inject/dependency_list_cache_name"
 require "carb/inject/injectable"
 
-describe Carb::Inject::Definition do
+describe Carb::Inject::DependencyList do
   it "raises if container can't be accessed using #[]" do
-     expect{Carb::Inject::Definition.new(Object.new)}.to raise_error TypeError
+     expect{Carb::Inject::DependencyList.new(Object.new)}.to raise_error TypeError
   end
 
   it "raises if container is nil" do
-     expect{Carb::Inject::Definition.new(nil)}.to raise_error TypeError
+     expect{Carb::Inject::DependencyList.new(nil)}.to raise_error TypeError
   end
 
   it "raises if included multiple times" do
-    mod = Carb::Inject::Definition.new({})
+    mod = Carb::Inject::DependencyList.new({})
 
     includer = -> do
       Class.new do
@@ -26,16 +26,16 @@ describe Carb::Inject::Definition do
   end
 
   it "memoizes itself on including class" do
-    mod = Carb::Inject::Definition.new({})
+    mod = Carb::Inject::DependencyList.new({})
 
     klass      = Class.new { include mod }
-    definition = klass.instance_variable_get(Carb::Inject::DefinitionCacheName)
+    dependency_list = klass.instance_variable_get(Carb::Inject::DependencyListCacheName)
 
-    expect(definition).to eq mod
+    expect(dependency_list).to eq mod
   end
 
   it "includes Injectable module on including class" do
-    mod = Carb::Inject::Definition.new({})
+    mod = Carb::Inject::DependencyList.new({})
 
     klass = Class.new { include mod }
 
@@ -43,7 +43,7 @@ describe Carb::Inject::Definition do
   end
 
   it "defines protected attr_reader for each passed dependency" do
-    mod   = Carb::Inject::Definition.new({ foo: 1 }, { foo: :foo })
+    mod   = Carb::Inject::DependencyList.new({ foo: 1 }, { foo: :foo })
     klass = Class.new { include mod }
 
     instance = klass.new
@@ -53,7 +53,7 @@ describe Carb::Inject::Definition do
   end
 
   it "defines attr_reader only if method doesn't exist already" do
-    mod   = Carb::Inject::Definition.new({ foo: 1 }, { foo: :foo })
+    mod   = Carb::Inject::DependencyList.new({ foo: 1 }, { foo: :foo })
     klass = Class.new do
       include mod
 
@@ -70,7 +70,7 @@ describe Carb::Inject::Definition do
   end
 
   it "defines attr_reader even if class method has same name" do
-    mod   = Carb::Inject::Definition.new({ foo: 1 }, { foo: :foo })
+    mod   = Carb::Inject::DependencyList.new({ foo: 1 }, { foo: :foo })
     klass = Class.new do
       def self.foo
         456

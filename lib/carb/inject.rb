@@ -1,6 +1,6 @@
 require "carb/inject/version"
-require "carb/inject/definition_cache_name"
-require "carb/inject/definition"
+require "carb/inject/dependency_list_cache_name"
+require "carb/inject/dependency_list"
 require "carb/inject/injectable"
 require "carb/inject/injector"
 
