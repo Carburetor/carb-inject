@@ -44,7 +44,8 @@ Or install it yourself as:
   <tr>
     <th>Dependency alias</th>
     <td>
-      A symbol representing <code>Dependency name</code>
+      A symbol representing <code>Dependency name</code>, must be a valid method
+      name
     </td>
   </tr>
   <tr>
