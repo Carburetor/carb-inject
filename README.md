@@ -37,9 +37,8 @@ Or install it yourself as:
   <tr>
     <th>Dependency name</th>
     <td>
-      An object representing the <code>Dependency</code> inside the container.
-      Allows to extract the dependency with
-      <code>container[dependency_name]</code>
+      An object which allows extracting a <code>Dependency</code> from the
+      container
     </td>
   </tr>
   <tr>
