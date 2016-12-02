@@ -1,5 +1,5 @@
 require "carb/inject/dependency_list_cache_name"
-require "carb/inject/dependency_storer"
+require "carb/inject/store_dependencies"
 
 module Carb
   module Inject
@@ -10,8 +10,8 @@ module Carb
       # @param dependencies [Hash] map where key is the name of the dependency
       #   and value is the actual dependency being injected
       def initialize(**dependencies)
-        dependency_storer = DependencyStorer.new
-        dependency_storer.call(self, **dependencies)
+        store_dependencies = StoreDependencies.new
+        store_dependencies.(self, **dependencies)
       end
     end
   end

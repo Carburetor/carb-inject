@@ -5,7 +5,7 @@ module Carb
     # Store dependencies on the specified object, setting instance variables
     #   having as name the key of the hash and as value the value of the hash
     # @api private
-    class DependencyStorer
+    class StoreDependencies
       def call(injectable, **dependencies)
         @injectable   = injectable
         @dependencies = dependencies
