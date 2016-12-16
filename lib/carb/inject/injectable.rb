@@ -1,4 +1,4 @@
-require "carb-core"
+require "carb"
 require "carb/inject/dependency_list_cache_name"
 require "carb/inject/store_dependencies"
 
