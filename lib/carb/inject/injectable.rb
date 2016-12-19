@@ -10,6 +10,14 @@ module Carb::Inject
     # @param dependencies [Hash] map where key is the name of the dependency
     #   and value is the actual dependency being injected
     def initialize(**dependencies)
+      inject_dependencies!(**dependencies)
+    end
+
+    protected
+
+    # Manually call this method if you want to customize your initializer
+    # or avoid calling `super`
+    def inject_dependencies!(**dependencies)
       store_dependencies = StoreDependencies.new
       store_dependencies.(self, **dependencies)
     end
