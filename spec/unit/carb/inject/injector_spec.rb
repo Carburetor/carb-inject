@@ -9,6 +9,28 @@ describe Carb::Inject::Injector do
     expect(injector[]).to be_a Carb::Inject::DependencyList
   end
 
+  it "creates a new DependencyList with passed auto_inject as false" do
+    allow(Carb::Inject::DependencyList).to receive(:new).and_call_original
+    injector = Carb::Inject::Injector.new({}, auto_inject: false)
+
+    dependency_list = injector[]
+
+    expect(dependency_list).to be_a Carb::Inject::DependencyList
+    expect(Carb::Inject::DependencyList).to have_received(:new)
+      .with({}, false, {})
+  end
+
+  it "creates a new DependencyList with default auto_inject as true" do
+    allow(Carb::Inject::DependencyList).to receive(:new).and_call_original
+    injector = Carb::Inject::Injector.new({})
+
+    dependency_list = injector[]
+
+    expect(dependency_list).to be_a Carb::Inject::DependencyList
+    expect(Carb::Inject::DependencyList).to have_received(:new)
+      .with({}, true, {})
+  end
+
   it "creates a new DependencyList passing merged dependencies and aliases" do
     allow(Carb::Inject::DependencyList).to receive(:new).and_call_original
     container = {}
@@ -18,7 +40,7 @@ describe Carb::Inject::Injector do
 
     expect(dependency_list).to be_a Carb::Inject::DependencyList
     expect(Carb::Inject::DependencyList).to have_received(:new)
-      .with(container, { foo: :foo, bar: :baz })
+      .with(container, true, { foo: :foo, bar: :baz })
   end
 
   it "merging gives priority to aliases over normal dependencies" do
@@ -29,7 +51,7 @@ describe Carb::Inject::Injector do
     dependency_list = injector[:foo, bar: :baz, foo: :blah]
 
     expect(Carb::Inject::DependencyList).to have_received(:new)
-      .with(container, { foo: :blah, bar: :baz })
+      .with(container, true, { foo: :blah, bar: :baz })
   end
 
   it "clean names to work as valid method names" do
@@ -40,7 +62,7 @@ describe Carb::Inject::Injector do
     dependency_list = injector["foo.bar", :"baz.lol" => "blah"]
 
     expect(Carb::Inject::DependencyList).to have_received(:new)
-      .with(container, { foo_bar: "foo.bar", baz_lol: "blah" })
+      .with(container, true, { foo_bar: "foo.bar", baz_lol: "blah" })
   end
 
   it "raises when can't convert dependency name to valid method name" do

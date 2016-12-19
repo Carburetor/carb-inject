@@ -1,4 +1,6 @@
 require "carb"
+require "carb/inject/injectable"
+require "carb/inject/auto_injectable"
 require "carb/inject/dependency_list_cache_name"
 
 module Carb::Inject
@@ -7,6 +9,7 @@ module Carb::Inject
     private
 
     attr_reader :container
+    attr_reader :auto_inject
     attr_reader :dependencies
 
     public
@@ -14,15 +17,19 @@ module Carb::Inject
     # Uses the passed container to resolve listed dependencies
     # @param container [#[]] resolve dependencies by using the value of
     #   `dependencies` hash passed to this initializer
+    # @param auto_inject [Boolean] if true, includes
+    #   {::Carb::Inject::AutoInjectable} which provides an initializer that
+    #   inject dependencies automatically
     # @param dependencies [Hash{Symbol => Object}] a hash representing
     #   required dependencies for the object. The key represent the alias used
     #   to access the real dependency name, which is the value of the hash.
     #   If you want to access the dependency using its real name, just set the
     #   alias to the real name. Example: `{ alias: :real_name }`
-    def initialize(container, **dependencies)
+    def initialize(container, auto_inject = true, **dependencies)
       ensure_correct_types!(container, dependencies)
 
       @container    = container
+      @auto_inject  = auto_inject
       @dependencies = dependencies
     end
 
@@ -58,6 +65,7 @@ module Carb::Inject
 
     def include_injectable(klass)
       klass.include(::Carb::Inject::Injectable)
+      klass.include(::Carb::Inject::AutoInjectable) if auto_inject
     end
 
     def define_readers(klass)

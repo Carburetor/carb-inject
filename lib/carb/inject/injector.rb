@@ -7,14 +7,18 @@ module Carb::Inject
     private
 
     attr_reader :container
+    attr_reader :auto_inject
 
     public
 
     # Initialize an injector that can be attached to a constant with the given
     # container
     # @param container [#[]] must return dependencies based on dependency name
-    def initialize(container)
-      @container = container
+    # @param auto_inject [Boolean] if true, provides an initializer that auto
+    #   injects dependencies by including {::Carb::Inject::AutoInjectable}
+    def initialize(container, auto_inject: true)
+      @container   = container
+      @auto_inject = auto_inject
     end
 
     # @param dependencies [Array<#to_s>] Array of dependency names, which will
@@ -31,7 +35,7 @@ module Carb::Inject
     #   contain objects not convertible to valid method names
     def [](*dependencies, **aliased_dependencies)
       deps = merge_dependencies(dependencies, aliased_dependencies)
-      Carb::Inject::DependencyList.new(container, **deps)
+      Carb::Inject::DependencyList.new(container, auto_inject, **deps)
     end
 
     private
