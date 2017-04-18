@@ -3,6 +3,7 @@ require "carb/inject/dependency_list_cache_name"
 require "carb/inject/dependency_list"
 require "carb/inject/injectable"
 require "carb/inject/injector"
+require "carb/inject/containerless_injector"
 
 module Carb
   module Inject
