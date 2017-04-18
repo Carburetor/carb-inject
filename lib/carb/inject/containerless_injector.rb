@@ -32,15 +32,21 @@ module Carb::Inject
     def [](**dependencies)
       deps      = build_dependencies(dependencies)
       container = callable_container.new(deps)
+      aliases   = build_aliases(deps)
 
-      Carb::Inject::DependencyList.new(container, auto_inject, **deps)
+      Carb::Inject::DependencyList.new(container, auto_inject, **aliases)
     end
 
     private
 
     def build_dependencies(dependencies)
-      validate_dependency_values(dependencies)
       clean_names(dependencies)
+    end
+
+    def build_aliases(dependencies)
+      dependencies.each_with_object({}) do |(name, _), aliases|
+        aliases[name] = name
+      end
     end
 
     def clean_names(dependencies)
