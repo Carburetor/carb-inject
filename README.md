@@ -161,6 +161,33 @@ john = JohnPerson.new(age: 20)
 john.hello # => NameError: undefined local variable or method `age'
 ```
 
+### Container-less injection
+
+There is an alternative way to use the library in a _containerless_ fashion.
+You will pass a list of dependency straight to the injector and you can
+easily inject and replace them with `inject_dependencies!`.
+Be aware that this method by default don't auto inject.
+
+```ruby
+require "carb-inject"
+
+Inject = Carb::Inject::ContainerlessInjector.new
+
+class JohnPerson
+  include Inject[name: -> { "John" }, age: -> { 123 }]
+
+  def hello
+    "Hello I'm #{name}, #{age} years old"
+  end
+end
+
+john = JohnPerson.new(age: 20)
+john.hello # => Hello I'm John, 20 years old
+```
+
+You will need to provide the dependency values every time, but for smaller
+projects is better than setting up a whole IoC container.
+
 ## Gotchas
 
 - Alias hash **must have symbols as keys**
