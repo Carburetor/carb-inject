@@ -28,7 +28,7 @@ module Carb::Inject
     #   dependency injection
     # @raise [ArgumentError] if passed dependencies contain invalid dependency
     #   names
-    # @raise [TypeError] if dependency value is not a lambda
+    # @raise [TypeError] if dependency is not a lambda
     def [](**dependencies)
       deps      = build_dependencies(dependencies)
       container = callable_container.new(deps)
