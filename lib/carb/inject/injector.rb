@@ -66,8 +66,9 @@ module Carb::Inject
 
     def add_aliased_dependencies(deps, aliased_deps)
       aliased_deps.each_with_object({}) do |(alias_name, value), lambdas|
-        lambdas[alias_name] = value if value.is_a?(::Proc)
-        deps[alias_name]    = value unless value.is_a?(::Proc)
+        lambdas[alias_name] = value      if value.is_a?(::Proc)
+        deps[alias_name]    = alias_name if value.is_a?(::Proc)
+        deps[alias_name]    = value      unless value.is_a?(::Proc)
       end
     end
 
