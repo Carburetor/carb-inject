@@ -21,8 +21,8 @@ module Carb::Inject
     # @param auto_inject [Boolean] if true, provides an initializer that auto
     #   injects dependencies by including {::Carb::Inject::AutoInjectable},
     #   false by default
-    def initialize(container = ErrorContainer.new, auto_inject = false)
-      @container   = container
+    def initialize(container = nil, auto_inject = false)
+      @container   = container || ErrorContainer.new
       @auto_inject = auto_inject
     end
 
@@ -52,7 +52,7 @@ module Carb::Inject
 
     def build_delegate(container, lambdas)
       callable = CallableContainer.new(lambdas)
-      DelegateContainer.new(container, callable)
+      DelegateContainer.new(callable, container)
     end
 
     def merge_dependencies(dependencies, aliased_dependencies)
