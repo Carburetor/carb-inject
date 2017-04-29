@@ -25,7 +25,11 @@ module Carb
     end
 
     def [](name)
-      dependencies.fetch(name).call
+      dependencies[name].call
+    end
+
+    def has_key?(name)
+      dependencies.has_key?(name)
     end
   end
 end

@@ -90,6 +90,10 @@ Then, create a class you want dependencies injected automatically
 class JohnPerson
   include Inject[:name, :age]
 
+  def initialize(**deps)
+    inject_dependencies!(deps)
+  end
+
   def hello
     "Hello I'm #{name}, #{age} years old"
   end
@@ -117,7 +121,7 @@ class JohnPerson
   include Inject[:name, :age]
 
   def initialize(last_name, **dependencies)
-    super(**dependencies)
+    inject_dependencies!(dependencies)
     @last_name = last_name
   end
 
@@ -136,6 +140,10 @@ Finally, you can alias dependencies
 class JohnPerson
   include Inject[special_name: :name, a_number: :age]
 
+  def initialize(**deps)
+    inject_dependencies!(deps)
+  end
+
   def hello
     "special_name is #{special_name}, a_number is #{a_number}"
   end
@@ -152,6 +160,10 @@ class. If you do, you must be the one taking care of them!
 class JohnPerson
   include Inject[:name]
 
+  def initialize(**deps)
+    inject_dependencies!(deps)
+  end
+
   def hello
     "Hello I'm #{name}, #{age} years old"
   end
@@ -161,32 +173,55 @@ john = JohnPerson.new(age: 20)
 john.hello # => NameError: undefined local variable or method `age'
 ```
 
-### Container-less injection
+### Auto invoke inject_dependencies!
 
-There is an alternative way to use the library in a _containerless_ fashion.
-You will pass a list of dependency straight to the injector and you can
-easily inject and replace them with `inject_dependencies!`.
-Be aware that this method by default don't auto inject.
+Instead of manually calling `inject_dependencies!`, you can invoke the
+injector with `true` as second argument. This has the downsides of including
+a module which creates an initializer, with all the consequences it creates
+(some issues with inheritance). It's not recommended, but if you don't use
+inheritance, it does the trick.
 
 ```ruby
 require "carb-inject"
 
-Inject = Carb::Inject::ContainerlessInjector.new
+container = { name: "john", age: 30 }
+Inject = Carb::Inject::Injector.new(container, true)
 
 class JohnPerson
-  include Inject[name: -> { "John" }, age: -> { 123 }]
+  include Inject[:name, :age]
 
   def hello
     "Hello I'm #{name}, #{age} years old"
   end
 end
 
-john = JohnPerson.new(age: 20)
-john.hello # => Hello I'm John, 20 years old
+john = JohnPerson.new
+john.hello # => Hello I'm john, 30 years old
 ```
 
-You will need to provide the dependency values every time, but for smaller
-projects is better than setting up a whole IoC container.
+### Passing lambdas
+
+There is an alternative way to use the library in a _containerless_ fashion.
+You will pass a list of dependency as usual, but instead of aliasing them,
+pass a lambda and it will be resolved when used
+
+```ruby
+require "carb-inject"
+
+container = { name: "John", last_name: "Snow" }
+Inject = Carb::Inject::Injector.new(container, true)
+
+class JohnPerson
+  include Inject[:last_name, foo: :name, age: -> { 30 }]
+
+  def hello
+    "Hello I'm #{foo} #{last_name}, #{age} years old"
+  end
+end
+
+john = JohnPerson.new
+john.hello # => Hello I'm John Snow, 30 years old
+```
 
 ## Gotchas
 
