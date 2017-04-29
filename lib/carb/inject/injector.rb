@@ -2,6 +2,7 @@ require "carb"
 require "carb/inject/dependency_list"
 require "carb/inject/error_container"
 require "carb/inject/delegate_container"
+require "carb/inject/callable_container"
 
 module Carb::Inject
   # Creates an injector with the specified container
@@ -40,21 +41,34 @@ module Carb::Inject
     # @raise [ArgumentError] if passed dependencies or aliased_dependencies
     #   contain objects not convertible to valid method names
     def [](*dependencies, **aliased)
-      deps, lambda_deps = merge_dependencies(dependencies, aliased)
+      deps, lambdas = merge_dependencies(dependencies, aliased)
+      wrapper = container
+      wrapper = build_delegate(container, lambdas) unless lambdas.empty?
 
-      Carb::Inject::DependencyList.new(container, auto_inject, **deps)
+      Carb::Inject::DependencyList.new(wrapper, auto_inject, **deps)
     end
 
     private
+
+    def build_delegate(container, lambdas)
+      callable = CallableContainer.new(lambdas)
+      DelegateContainer.new(container, callable)
+    end
 
     def merge_dependencies(dependencies, aliased_dependencies)
       deps = {}
 
       dependencies.each { |name| deps[name] = name }
-      aliased, lambdas = split(aliased_dependencies)
-      aliased.each { |alias_name, name| deps[alias_name] = name }
+      lambdas = add_aliased_dependencies(deps, aliased_dependencies)
 
-      clean_names(deps)
+      [clean_names(deps), lambdas]
+    end
+
+    def add_aliased_dependencies(deps, aliased_deps)
+      aliased_deps.each_with_object({}) do |(alias_name, value), lambdas|
+        lambdas[alias_name] = value if value.is_a?(::Proc)
+        deps[alias_name]    = value unless value.is_a?(::Proc)
+      end
     end
 
     def clean_names(dependencies)
