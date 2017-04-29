@@ -22,6 +22,7 @@
 public
 *.backup
 npm-debug.log
+.rspec_status
 
 # Ignore bundler config
 /.bundle

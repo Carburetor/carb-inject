@@ -8,6 +8,7 @@ RSpec.configure do |config|
     mocks_config.verify_partial_doubles = true
   end
 
+  config.example_status_persistence_file_path = ".rspec_status"
   config.run_all_when_everything_filtered = true
   config.filter_run :focus unless ENV["COVERAGE"]
   config.filter_run_excluding broken: true
