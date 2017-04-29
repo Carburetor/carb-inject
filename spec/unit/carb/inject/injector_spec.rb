@@ -9,18 +9,18 @@ describe Carb::Inject::Injector do
     expect(injector[]).to be_a Carb::Inject::DependencyList
   end
 
-  it "creates a new DependencyList with passed auto_inject as false" do
+  it "creates a new DependencyList with passed auto_inject as true" do
     allow(Carb::Inject::DependencyList).to receive(:new).and_call_original
-    injector = Carb::Inject::Injector.new({}, auto_inject: false)
+    injector = Carb::Inject::Injector.new({}, auto_inject: true)
 
     dependency_list = injector[]
 
     expect(dependency_list).to be_a Carb::Inject::DependencyList
     expect(Carb::Inject::DependencyList).to have_received(:new)
-      .with({}, false, {})
+      .with({}, true, {})
   end
 
-  it "creates a new DependencyList with default auto_inject as true" do
+  it "creates a new DependencyList with default auto_inject as false" do
     allow(Carb::Inject::DependencyList).to receive(:new).and_call_original
     injector = Carb::Inject::Injector.new({})
 
@@ -28,7 +28,7 @@ describe Carb::Inject::Injector do
 
     expect(dependency_list).to be_a Carb::Inject::DependencyList
     expect(Carb::Inject::DependencyList).to have_received(:new)
-      .with({}, true, {})
+      .with({}, false, {})
   end
 
   it "creates a new DependencyList passing merged dependencies and aliases" do

@@ -8,7 +8,7 @@ describe Carb::Inject::Injector, type: :feature do
       :foo       => -> { 123 },
       "carb.bar" => -> { "test" }
     })
-    injector = Carb::Inject::Injector.new(container)
+    injector = Carb::Inject::Injector.new(container, auto_inject: true)
     klass = Class.new do
       include injector[:foo, bar: "carb.bar"]
 
@@ -27,7 +27,7 @@ describe Carb::Inject::Injector, type: :feature do
       :foo       => -> { 123 },
       "carb.bar" => -> { "test" }
     })
-    injector = Carb::Inject::Injector.new(container)
+    injector = Carb::Inject::Injector.new(container, auto_inject: true)
     klass = Class.new do
       include injector[:foo, bar: "carb.bar"]
 
@@ -39,5 +39,24 @@ describe Carb::Inject::Injector, type: :feature do
     instance = klass.new(foo: "blah")
 
     expect(instance.output).to eq "blah test"
+  end
+
+  it "creates on-the-fly injection for lambdas passed directly" do
+    container = Carb::SimpleContainer.new({
+      :foo       => -> { 123 },
+      "carb.bar" => -> { "test" }
+    })
+    injector = Carb::Inject::Injector.new(container, auto_inject: true)
+    klass = Class.new do
+      include injector[:foo, bar: -> { "otherprop" }]
+
+      def output
+        "#{foo} #{bar}"
+      end
+    end
+
+    instance = klass.new(foo: "blah")
+
+    expect(instance.output).to eq "blah otherprop"
   end
 end
