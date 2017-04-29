@@ -21,7 +21,7 @@ module Carb::Inject
     # @param auto_inject [Boolean] if true, provides an initializer that auto
     #   injects dependencies by including {::Carb::Inject::AutoInjectable},
     #   false by default
-    def initialize(container = ErrorContainer.new, auto_inject: false)
+    def initialize(container = ErrorContainer.new, auto_inject = false)
       @container   = container
       @auto_inject = auto_inject
     end
