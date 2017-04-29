@@ -15,7 +15,8 @@ module Carb::Inject
     # container
     # @param container [#[]] must return dependencies based on dependency name
     # @param auto_inject [Boolean] if true, provides an initializer that auto
-    #   injects dependencies by including {::Carb::Inject::AutoInjectable}
+    #   injects dependencies by including {::Carb::Inject::AutoInjectable},
+    #   false by default
     def initialize(container, auto_inject: true)
       @container   = container
       @auto_inject = auto_inject
