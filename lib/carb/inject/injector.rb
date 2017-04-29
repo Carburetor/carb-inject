@@ -1,6 +1,7 @@
 require "carb"
 require "carb/inject/dependency_list"
 require "carb/inject/error_container"
+require "carb/inject/delegate_container"
 
 module Carb::Inject
   # Creates an injector with the specified container
@@ -28,18 +29,19 @@ module Carb::Inject
     #   be converted using {Object#to_s}, make sure the string version is a
     #   valid method name or it will raise, it will be used to create
     #   attr_readers on the object
-    # @param aliased_dependencies [Hash{Symbol => Object, Proc}] if value is
-    #   an {Object}, alias => dependency name hash, the alias must be a valid
-    #   method name or it will raise. The aliases will be used to create
-    #   attr_readers which will return the dependency from the container.
+    # @param aliased [Hash{Symbol => Object, Proc}] if value is an {Object},
+    #   alias => dependency name hash, the alias must be a valid method name
+    #   or it will raise. The aliases will be used to create attr_readers
+    #   which will return the dependency from the container.
     #   If value is {Proc}, an attr_reader with the key as bane is created and
     #   value the output of invoking the {Proc}
     # @return [DependencyList] module which can be included and will take care
     #   of automatically injecting not-supplied dependency
     # @raise [ArgumentError] if passed dependencies or aliased_dependencies
     #   contain objects not convertible to valid method names
-    def [](*dependencies, **aliased_dependencies)
-      deps = merge_dependencies(dependencies, aliased_dependencies)
+    def [](*dependencies, **aliased)
+      deps, lambda_deps = merge_dependencies(dependencies, aliased)
+
       Carb::Inject::DependencyList.new(container, auto_inject, **deps)
     end
 
@@ -49,7 +51,8 @@ module Carb::Inject
       deps = {}
 
       dependencies.each { |name| deps[name] = name }
-      aliased_dependencies.each { |aliased, name| deps[aliased] = name }
+      aliased, lambdas = split(aliased_dependencies)
+      aliased.each { |alias_name, name| deps[alias_name] = name }
 
       clean_names(deps)
     end

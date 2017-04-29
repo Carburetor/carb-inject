@@ -3,6 +3,12 @@ require "carb/inject/delegate_container"
 require "carb/inject/dependency_missing_error"
 
 describe Carb::Inject::DelegateContainer do
+  it "raises when initialized without container" do
+    delegator = -> { Carb::Inject::DelegateContainer.new() }
+
+    expect { delegator.() }.to raise_error ArgumentError
+  end
+
   describe "#[]" do
     it "is key from main_container when present" do
       main      = { foo: 1 }
