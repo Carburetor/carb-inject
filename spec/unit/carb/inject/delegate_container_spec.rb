@@ -12,7 +12,7 @@ describe Carb::Inject::DelegateContainer do
       expect(delegator[:foo]).to eq 1
     end
 
-    it "is key from backup_container when present only in backup" do
+    it "is key from backup_container when not present in main" do
       main      = { foo: 1 }
       backup    = { bar: 2 }
       delegator = Carb::Inject::DelegateContainer.new(main, backup)
@@ -27,6 +27,32 @@ describe Carb::Inject::DelegateContainer do
       error     = Carb::Inject::DependencyMissingError
 
       expect { delegator[:baz] }.to raise_error error
+    end
+  end
+
+  describe "#has_key?" do
+    it "is true when key is present in main_container" do
+      main      = { foo: 1 }
+      backup    = { bar: 2 }
+      delegator = Carb::Inject::DelegateContainer.new(main, backup)
+
+      expect(delegator.has_key?(:foo)).to be true
+    end
+
+    it "is true when key is present only in backup_container" do
+      main      = { foo: 1 }
+      backup    = { bar: 2 }
+      delegator = Carb::Inject::DelegateContainer.new(main, backup)
+
+      expect(delegator.has_key?(:bar)).to be true
+    end
+
+    it "is false when key is missing from both containers" do
+      main      = { foo: 1 }
+      backup    = { bar: 2 }
+      delegator = Carb::Inject::DelegateContainer.new(main, backup)
+
+      expect(delegator.has_key?(:baz)).to be false
     end
   end
 end

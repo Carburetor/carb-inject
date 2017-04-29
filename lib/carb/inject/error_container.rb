@@ -13,5 +13,11 @@ module Carb::Inject
       error_class = ::Carb::Inject::DependencyMissingError
       raise error_class.new(name), format(error_class::MESSAGE, name.to_s)
     end
+
+    # @param name [Object] dependency name
+    # @return [false]
+    def has_key?(name)
+      false
+    end
   end
 end

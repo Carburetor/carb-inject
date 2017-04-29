@@ -23,7 +23,9 @@ module Carb::Inject
     end
 
     # @param name [Object] dependency name
-    # @return [Object] dependency for given name, obtained by calling lambda
+    # @return [Object] dependency for given name if present in main_container,
+    #   otherwise in backup_container, otherwise it raises
+    # @raise [DependencyMissingError]
     def [](name)
       return main_container[name]   if main_container.has_key?(name)
       return backup_container[name] if backup_container.has_key?(name)

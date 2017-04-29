@@ -1,4 +1,5 @@
 require "carb"
+require "carb/inject/dependency_missing_error"
 
 module Carb::Inject
   # Simple container for holding dependency hashmap with Lambda callable values
@@ -17,8 +18,12 @@ module Carb::Inject
 
     # @param name [Object] dependency name
     # @return [Object] dependency for given name, obtained by calling lambda
+    # @raise [DependencyMissingError]
     def [](name)
-      dependencies.fetch(name).call
+      return dependencies[name].call if has_key?(name)
+
+      error_class = ::Carb::Inject::DependencyMissingError
+      raise error_class.new(name), format(error_class::MESSAGE, name.to_s)
     end
 
     # @param name [Object] dependency name
