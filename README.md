@@ -67,10 +67,10 @@ Or install it yourself as:
 ## Usage
 
 First you'll need a container object.
-[carb-container](https://github.com/dry-rb/dry-container) provides a simple
-`RegistryContainer` which you can use.
-Alternatively, you can use a simple ruby hashmap, or use it in a containerless
-fashion.
+[carb-container](https://github.com/Carburetor/carb-container) provides a
+simple `RegistryContainer` which you can use.
+Alternatively, you can use a simple ruby hashmap, or use `carb-inject` in an
+entirely [containerless fashion](#passing-lambdas)
 
 ```ruby
 container = { name: "john", age: 30 }
