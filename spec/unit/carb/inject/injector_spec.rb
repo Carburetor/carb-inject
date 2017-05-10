@@ -1,12 +1,12 @@
 require "spec_helper"
 require "carb/inject/injector"
 require "carb/inject/dependency_list"
-require "carb/inject/error_container"
-require "carb/inject/delegate_container"
+require "carb/container/error_container"
+require "carb/container/delegate_container"
 
 describe Carb::Inject::Injector do
-  ErrorContainer    = ::Carb::Inject::ErrorContainer
-  DelegateContainer = ::Carb::Inject::DelegateContainer
+  ErrorContainer    = ::Carb::Container::ErrorContainer
+  DelegateContainer = ::Carb::Container::DelegateContainer
 
   it "creates a new DependencyList with passed container" do
     injector = Carb::Inject::Injector.new({})

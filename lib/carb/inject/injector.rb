@@ -1,8 +1,8 @@
 require "carb"
 require "carb/inject/dependency_list"
-require "carb/inject/error_container"
-require "carb/inject/delegate_container"
-require "carb/inject/callable_container"
+require "carb/container/error_container"
+require "carb/container/delegate_container"
+require "carb/container/registry_container"
 
 module Carb::Inject
   # Creates an injector with the specified container
@@ -22,7 +22,7 @@ module Carb::Inject
     #   injects dependencies by including {::Carb::Inject::AutoInjectable},
     #   false by default
     def initialize(container = nil, auto_inject = false)
-      @container   = container || ErrorContainer.new
+      @container   = container || ::Carb::Container::ErrorContainer.new
       @auto_inject = auto_inject
     end
 
@@ -51,8 +51,8 @@ module Carb::Inject
     private
 
     def build_delegate(container, lambdas)
-      callable = CallableContainer.new(lambdas)
-      DelegateContainer.new(callable, container)
+      registry = ::Carb::Container::RegistryContainer.new(lambdas)
+      ::Carb::Container::DelegateContainer.new([registry, container])
     end
 
     def merge_dependencies(dependencies, aliased_dependencies)
