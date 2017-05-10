@@ -67,10 +67,10 @@ Or install it yourself as:
 ## Usage
 
 First you'll need a container object.
-[dry-container](https://github.com/dry-rb/dry-container) will do the trick,
-otherwise just check the implementation of
-[Carb::SimpleContainer](https://github.com/Carburetor/carb-inject/blob/b3e9fea68672284aff53c8b78ba0064474d94021/spec/support/simple_container.rb) in
-tests
+[carb-container](https://github.com/dry-rb/dry-container) provides a simple
+`RegistryContainer` which you can use.
+Alternatively, you can use a simple ruby hashmap, or use it in a containerless
+fashion.
 
 ```ruby
 container = { name: "john", age: 30 }
@@ -232,12 +232,11 @@ john.hello # => Hello I'm John Snow, 30 years old
 
 ## Features
 
-- Supports inheritance (as long as you call `super`)
+- Supports inheritance
 - Can write your own injector if you don't like the syntax of the existing one
 - Can alias dependencies
-- Supports any container which responds to `[]`
-- Can write your own initializer with your own arguments (as long as you call
-  `super`)
+- Supports any container which responds to `[]` and `has_key?`
+- Can write your own initializer with your own arguments
 
 ## Development
 
