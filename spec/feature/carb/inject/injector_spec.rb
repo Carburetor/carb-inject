@@ -1,10 +1,10 @@
 require "spec_helper"
 require "carb-inject"
-require "support/simple_container"
+require "carb/container/registry_container"
 
 describe Carb::Inject::Injector, type: :feature do
   it "injects dependencies automatically" do
-    container = Carb::SimpleContainer.new({
+    container = Carb::Container::RegistryContainer.new({
       :foo       => -> { 123 },
       "carb.bar" => -> { "test" }
     })
@@ -23,7 +23,7 @@ describe Carb::Inject::Injector, type: :feature do
   end
 
   it "overwrite dependencies with passed arguments" do
-    container = Carb::SimpleContainer.new({
+    container = Carb::Container::RegistryContainer.new({
       :foo       => -> { 123 },
       "carb.bar" => -> { "test" }
     })
@@ -42,7 +42,7 @@ describe Carb::Inject::Injector, type: :feature do
   end
 
   it "creates on-the-fly injection for lambdas passed directly" do
-    container = Carb::SimpleContainer.new({
+    container = Carb::Container::RegistryContainer.new({
       :foo       => -> { 123 },
       "carb.bar" => -> { "test" }
     })
