@@ -2,7 +2,9 @@
 
 `carb-inject` is an utility library for automated dependency injection.
 Together with a generic container (even a simple `Hash`!), it will cover all
-the needs for an IoC container.
+the needs for an IoC container. Check out
+[carb-container](https://github.com/Carburetor/carb-container) for more
+advanced ones.
 
 ## Installation
 
